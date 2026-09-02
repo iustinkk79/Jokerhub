@@ -1,0 +1,127 @@
+-- JokerHub | Custom Mobile GUI with On-Screen Touch Buttons
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("ImageLabel")
+local Title = Instance.new("TextLabel")
+local Container = Instance.new("ScrollingFrame")
+local UIListLayout = Instance.new("UIListLayout")
+
+-- Parent GUI
+ScreenGui.Name = "JokerHubGui"
+ScreenGui.Parent = game:GetService("CoreGui") or game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.ResetOnSpawn = false
+
+-- MENIU PRINCIPAL (Cu imagine de fundal stil Anime)
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+MainFrame.Position = UDim2.new(0.05, 0, 0.2, 0)
+MainFrame.Size = UDim2.new(0, 320, 0, 380)
+MainFrame.Image = "rbxassetid://13897216260" -- Imagine stil anime pe fundal
+MainFrame.ImageTransparency = 0.4
+MainFrame.Active = true
+MainFrame.Draggable = true
+
+Title.Parent = MainFrame
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.Text = "  JOKERHUB | STEAL A BRAINROT"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 18
+Title.Font = Enum.Font.SourceSansBold
+Title.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+Title.BackgroundTransparency = 0.5
+
+-- CONTROALE DE VITEZĂ & OPTIONS
+Container.Parent = MainFrame
+Container.Position = UDim2.new(0, 10, 0, 50)
+Container.Size = UDim2.new(1, -20, 1, -60)
+Container.BackgroundTransparency = 1
+Container.ScrollBarThickness = 4
+
+UIListLayout.Parent = Container
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout.Padding = UDim me and UDim.new(0, 8) or UDim.new(0, 8)
+
+-- Funcție de creat butoane
+local function CreateButton(text, callback)
+    local btn = Instance.new("TextButton")
+    btn.Parent = Container
+    btn.Size = UDim2.new(1, 0, 0, 35)
+    btn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    btn.BackgroundTransparency = 0.3
+    btn.Text = text
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.Font = Enum.Font.SourceSansBold
+    btn.TextSize = 14
+    btn.MouseButton1Click:Connect(callback)
+    return btn
+end
+
+-- OPCIUNI IN MENIU
+CreateButton("Normal Speed (38)", function()
+    if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 38
+    end
+end)
+
+CreateButton("Carry Speed (20)", function()
+    if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 20
+    end
+end)
+
+CreateButton("Toggle Hitbox Extender", function()
+    for _, player in pairs(game.Players:GetPlayers()) do
+        if player ~= game.Players.LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            local hrp = player.Character.HumanoidRootPart
+            hrp.Size = Vector3.new(10, 10, 10)
+            hrp.Transparency = 0.7
+            hrp.BrickColor = BrickColor.new("Really red")
+        end
+    end
+end)
+
+
+-- BUTOANELE TACTILE PE ECRAN (IN DREAPTA - Ca în poza ta)
+local RightGrid = Instance.new("Frame")
+RightGrid.Parent = ScreenGui
+RightGrid.Position = UDim2.new(0.75, 0, 0.15, 0)
+RightGrid.Size = UDim2.new(0, 180, 0, 350)
+RightGrid.BackgroundTransparency = 1
+
+local GridLayout = Instance.new("UIGridLayout")
+GridLayout.Parent = RightGrid
+GridLayout.CellSize = UDim2.new(0, 80, 0, 45)
+GridLayout.CellPadding = UDim2.new(0, 8, 0, 8)
+
+local function CreateTouchButton(name, action)
+    local tBtn = Instance.new("TextButton")
+    tBtn.Parent = RightGrid
+    tBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    tBtn.BackgroundTransparency = 0.3
+    tBtn.Text = name
+    tBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    tBtn.Font = Enum.Font.SourceSansBold
+    tBtn.TextSize = 12
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 8)
+    corner.Parent = tBtn
+
+    tBtn.MouseButton1Click:Connect(action)
+end
+
+-- Creează grila de butoane din dreapta
+CreateTouchButton("DROP", function() print("Drop pressed") end)
+CreateTouchButton("AIMBOT", function() print("Aimbot pressed") end)
+CreateTouchButton("TP DOWN", function() 
+    if game.Players.LocalPlayer.Character then
+        game.Players.LocalPlayer.Character:MoveTo(game.Players.LocalPlayer.Character.PrimaryPart.Position - Vector3.new(0, 10, 0))
+    end
+end)
+CreateTouchButton("CARRY SPEED", function() 
+    if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 20
+    end
+end)
+CreateTouchButton("LOGGER", function() print("Logger pressed") end)
+CreateTouchButton("TP BAT", function() print("TP Bat pressed") end)
